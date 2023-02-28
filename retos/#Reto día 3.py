@@ -1,45 +1,41 @@
-from enum import Enum
+'''
+ * Escribe un programa que sea capaz de generar contraseñas de forma aleatoria.
+ * Podrás configurar generar contraseñas con los siguientes parámetros:
+ * - Longitud: Entre 8 y 16.
+ * - Con o sin letras mayúsculas.
+ * - Con o sin números.
+ * - Con o sin símbolos.
+ * (Pudiendo combinar todos estos parámetros entre ellos)
+'''
+import random
 
-class Player(Enum):
-    P1 = 1
-    P2 = 2
-
-def tenis_game(points: list):
+def pass_generator(length=8, capital=False, numbers=False, symbols=False):
     
-    game = ["Love", "15", "30", "40"]
-    p1_points = 0
-    p2_points = 0
-    finished = False
-    error = False
+    #Fuente: https://www.ascii-code.com
     
-    for player in points:
-        
-        error = finished
-        
-        p1_points += 1 if player == Player.P1 else 0
-        p2_points += 1 if player == Player.P2 else 0
-        
-        if p1_points >= 3 and p2_points >= 3:
-            if not finished and abs(p1_points - p2_points) <= 1:
-                print ("Deuce" if p1_points == p2_points else
-                   "Ventaja P1" if p1_points > p2_points else "Ventaja P2")
-            else:
-                finished = True
-        else:
-            if p1_points < 4 and p2_points < 4:
-                print (f"{game[p1_points]} - {game[p2_points]}")
-            else: 
-                finished = True
-            
-    print("Los puntos jugados no son correctos" if error or not finished else
-          "Ha ganado el P1" if p1_points > p2_points else "Ha ganado el P2")
+    characters = list(range(97,123))
     
-tenis_game([Player.P1, Player.P1, Player.P2, Player.P2,
-            Player.P1, Player.P2, Player.P1, Player.P1])
+    if capital:
+        characters += list(range(65,91))
+        
+    if numbers:
+        characters += list(range(49,58))
+        
+    if symbols:
+        characters += list(range(33,48)) + \
+            list(range(58,65)) + list(range(91,97))
+    
+    password = ""
+    
+    final_length = 8 if length<8 else 16 if length > 16 else length
+    
+    while len(password) < final_length:
+        password += chr(random.choice(characters))
+    
+    return password
 
-tenis_game([Player.P1, Player.P1, Player.P2, Player.P2,
-           Player.P1, Player.P2, Player.P1, Player.P1, Player.P2, Player.P1])
 
-tenis_game([Player.P1, Player.P1, Player.P1, Player.P1, Player.P1, Player.P1])
 
-tenis_game([Player.P1, Player.P1])
+print(pass_generator())
+print(pass_generator(length = 12, capital = True, numbers = True, symbols = True))
+
